@@ -1,4 +1,5 @@
-# DE Boards Configuration Files
+DE Boards Configuration Files
+=============================
 
 Directory that holds the configuration files for the DE boards used in the
 design of the project. Only the needed files to replicate the Quartus project

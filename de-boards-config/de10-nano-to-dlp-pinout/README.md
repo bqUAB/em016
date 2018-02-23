@@ -15,9 +15,9 @@ in the adapter board [schematic](/adapter-board/kicad/adapter-board-schematic.pd
 
 ## File Description
 
-**.qsf**: quartus settings file. This file stores the pin assignments for
-the Cyclone V SoC found on the DE10-Nano.
+**.qsf**: quartus settings file. This file stores the pin assignments for the
+Cyclone V SoC found on the DE10-Nano.
 
-**.csv**: comma-separated values. This file stores the pinout
-relationship between the DE10's GPIOs and the [DLP 2000 EVM](http://www.ti.com/tool/DLPDLCR2000EVM)
+**.csv**: comma-separated values. This file stores the pinout relationship
+between the DE10's GPIOs and the [DLP 2000 EVM](http://www.ti.com/tool/DLPDLCR2000EVM)
 GPIOs.
