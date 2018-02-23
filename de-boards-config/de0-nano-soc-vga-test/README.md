@@ -19,4 +19,5 @@ immediately. (Use at your own risk, provided as is)
 
 ## Dependencies
 [vga_sync.vhd](../../vhdl/vga_sync.vhd)
+
 [vga_top.vhd](../../vhdl/vga_top.vhd)
