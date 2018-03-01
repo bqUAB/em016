@@ -18,18 +18,18 @@ ARCHITECTURE structure OF i2c_clk IS
 
 COMPONENT i2c_clk_div 
 	PORT(
-      div_clK_in    : IN  STD_LOGIC;               --system clock
-      div_reset_n   : IN  STD_LOGIC;               --asynchronous reset
-      div_ena       : IN  STD_LOGIC;               --enable 
-      div_clk_out_d : OUT STD_LOGIC);           	   --frequency output
+      clK_in    : IN  STD_LOGIC;               --system clock
+      reset_n   : IN  STD_LOGIC;               --asynchronous reset
+      ena       : IN  STD_LOGIC;               --enable 
+      clk_out_d : OUT STD_LOGIC);           	  --frequency output
 END COMPONENT;
 
 COMPONENT tff_x 	
 	  Port(
-        t_clk     : in std_logic;
-        t_reset_n : in std_logic;
-        t_t       : in std_logic;
-        t_q       : out std_logic);
+        clk     : in std_logic;
+        reset_n : in std_logic;
+        t       : in std_logic;
+        q       : out std_logic);
 END COMPONENT;
 
 signal ttemp : std_logic;
