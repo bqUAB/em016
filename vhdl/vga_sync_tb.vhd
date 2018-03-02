@@ -2,7 +2,7 @@
 -- * VGA synchronization testbench *
 -- *********************************
 
-library ieee; 
+library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
@@ -18,7 +18,7 @@ architecture arch_tb of vga_sync_tb is
   signal sw: std_logic_vector(2 downto 0);
 
   -- Outputs
-  signal px_clk, data_en, hsync, vsync: std_logic;
+  signal px_clk, video_on, hsync, vsync: std_logic;
   signal px_x, px_y: std_logic_vector(9 downto 0);
 
   -- Internal signals
@@ -34,7 +34,7 @@ begin
              clk       => clk,
              rst       => rst,
              px_clk    => px_clk,
-             video_on  => data_en,
+             video_on  => video_on,
              pixel_x   => px_x,
              pixel_y   => px_y,
              hsync     => hsync,
@@ -46,14 +46,14 @@ begin
 
     if rst = '0' then
       rgb_reg <= (others => '0');
-    
+
     elsif rising_edge(clk) then
       rgb_reg <= sw;
     end if;
 
   end process;
 
-  rgb <= rgb_reg when data_en = '1' else "000";
+  rgb <= rgb_reg when video_on = '1' else "000";
 
   -- =====
   -- Clock
