@@ -1,14 +1,14 @@
--- **********************************************
--- * Testbench for the VGA dot tracking circuit *
--- **********************************************
+-- *****************************************************
+-- * Testbench for the pixel position tracking circuit *
+-- *****************************************************
 
 library ieee; 
 use ieee.std_logic_1164.all;
 
-entity dot_xy_tb is
-end dot_xy_tb;
+entity pos_xy_tb is
+end pos_xy_tb;
 
-architecture arch_tb of dot_xy_tb is
+architecture arch_tb of pos_xy_tb is
 
   constant T: time := 20 ns;  -- Clock period
 
@@ -17,7 +17,7 @@ architecture arch_tb of dot_xy_tb is
   signal px_x, px_y : std_logic_vector(9 downto 0);
 
   -- Outputs
-  signal w_dir: std_logic_vector(13 downto 0);
+  signal w_addr: std_logic_vector(13 downto 0);
   signal we, bitmap_on: std_logic;
 
 begin
@@ -27,7 +27,7 @@ begin
     port map(
              clk      => clk,
              rst      => rst,
-             px_tick  => open,
+             px_clk   => open,
              video_on => open,
              pixel_x  => px_x,
              pixel_y  => px_y,
@@ -36,7 +36,7 @@ begin
     );
 
   -- Instantiate a VGA dot tracking circuit
-  dot_xy_unit: entity work.dot_xy(arch)
+  pos_xy_unit: entity work.pos_xy(arch)
     port map(
              clk       => clk,
              rst       => rst,
@@ -44,7 +44,7 @@ begin
              px_y      => px_y,
              we        => we,
              bitmap_on => bitmap_on,
-             w_dir     => w_dir
+             w_addr     => w_addr
     );
 
   -- Clock

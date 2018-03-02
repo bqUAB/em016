@@ -9,10 +9,10 @@ use ieee.numeric_std.all;
 entity vga_sync is
 
   port( 
-    clk     , rst     : in  std_logic;  -- 50 MHz clock
-    px_clk  , data_en : out std_logic;  -- Video on
-    hsync   , vsync   : out std_logic;
-    pixel_x , pixel_y : out std_logic_vector (9 downto 0)
+    clk     , rst      : in  std_logic;  -- 50 MHz clock
+    px_clk  , video_on : out std_logic;  -- Video on
+    hsync   , vsync    : out std_logic;
+    pixel_x , pixel_y  : out std_logic_vector (9 downto 0)
   );
 
 end vga_sync;
@@ -132,7 +132,7 @@ begin
     '0';
 
   -- video on/off
-  data_en <=
+  video_on <=
     '1' when (h_count_reg < HD) and (v_count_reg < VD) else
     '0';
 

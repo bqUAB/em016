@@ -31,14 +31,14 @@ begin
   -- =============
   vga_sync_unit: entity work.vga_sync(arch)
     port map(
-             clk      => clk,
-             rst      => rst,
-             px_clk   => px_clk,
-             data_en  => data_en,
-             pixel_x  => px_x,
-             pixel_y  => px_y,
-             hsync    => hsync,
-             vsync    => vsync
+             clk       => clk,
+             rst       => rst,
+             px_clk    => px_clk,
+             video_on  => data_en,
+             pixel_x   => px_x,
+             pixel_y   => px_y,
+             hsync     => hsync,
+             vsync     => vsync
     );
 
   -- RGB Buffer

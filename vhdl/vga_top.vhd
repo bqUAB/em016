@@ -11,14 +11,14 @@ entity vga_top is
     clk  , rst   : in  std_logic;
     sw           : in  std_logic_vector(2 downto 0);
     rgb          : out std_logic_vector(2 downto 0);
-    hsync, vsync, px_clk, data_en : out std_logic
+    hsync, vsync, px_clk, video_on : out std_logic
   );
 end vga_top;
 
 architecture arq of vga_top is
 
   signal rgb_reg : std_logic_vector(2 downto 0);
-  signal dataen  : std_logic;
+  signal data_en  : std_logic;
 
 begin
 
@@ -28,7 +28,7 @@ begin
              clk      => clk,
              rst      => rst,
              px_clk   => px_clk,
-             data_en  => dataen,
+             video_on  => data_en,
              pixel_x  => open,
              pixel_y  => open,
              hsync    => hsync,
@@ -47,7 +47,7 @@ begin
 
   end process;
   
-  rgb     <= rgb_reg when dataen = '1' else "000";
-  data_en <= dataen;
+  rgb     <= rgb_reg when data_en = '1' else "000";
+  video_on <= data_en;
 
 end arq;
