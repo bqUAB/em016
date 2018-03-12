@@ -6,13 +6,12 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
--- Uses debounced switches as RBG inputs
 entity px_gen is
   port(
-    clk  , rst        : in  std_logic;
-    rgb               : in  std_logic_vector(23 downto 0);
-    red  , green, blue: out std_logic_vector( 7 downto 0);
-    hsync, vsync      : out std_logic
+       clk  , rst         : in  std_logic;
+       rgb                : in  std_logic_vector(23 downto 0);
+       red  , green, blue : out std_logic_vector( 7 downto 0);
+       hsync, vsync       : out std_logic
   );
 end px_gen;
 
