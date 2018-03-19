@@ -37,7 +37,7 @@ CPPFLAGS = -g -std=c++11 -Wall
 LDFLAGS  = -g -Wall
 
 ################################################################################
-# Don't change anything below this line                                        #
+# Don't change anything below this line
 ################################################################################
 
 # Some directory and file magic

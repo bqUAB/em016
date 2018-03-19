@@ -1,8 +1,8 @@
 /* Simplified I2C class based on:
 http://docs.micropython.org/en/latest/wipy/library/machine.I2C.html
 */
-#ifndef I2C_H
-#define I2C_H
+#ifndef I2C_H_
+#define I2C_H_
 
 #include <stdio.h>  // Needed for printf, snprintf, perror
 #include <cstdint>  // Needed for unit uint8_t data type
@@ -36,4 +36,4 @@ class I2cBus {
 
 };
 
-#endif // I2C_H
+#endif // I2C_H_

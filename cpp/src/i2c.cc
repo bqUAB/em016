@@ -1,4 +1,4 @@
-#include "i2c.h"
+#include <i2c.h>
 
 // I2C bus constructor
 I2cBus::I2cBus(int bus_n) {
