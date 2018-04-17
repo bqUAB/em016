@@ -142,5 +142,5 @@ begin
   hsync   <= h_sync_reg;
   pixel_y <= std_logic_vector(v_count_reg);
   vsync   <= v_sync_reg;
-  
+
 end arch;
