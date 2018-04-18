@@ -10,6 +10,7 @@ entity dlp2k is
   port(
     clk  , rst   : in  std_logic;
     sw           : in  std_logic_vector( 2 downto 0);
+    led          : out std_logic_vector( 2 downto 0);
     data         : out std_logic_vector(23 downto 0);
     hsync, vsync, px_clk, video_on : out std_logic;
     proj_on , host_pnt : out std_logic
@@ -18,6 +19,7 @@ end dlp2k;
 
 architecture arq of dlp2k is
 
+  signal led_reg : std_logic_vector( 2 downto 0);
   signal data_reg: std_logic_vector(23 downto 0);
   signal video_on_int : std_logic;  -- Signal needed for RGB register
 
@@ -44,20 +46,24 @@ begin
 
     elsif(rising_edge(clk)) then
 
-       case sw is
+      led_reg <= sw;
 
-        when "001"  => data_reg <= "111111110000000000000000";
+      case sw is
+
+        when "000"  => data_reg <= "000000000000000000000000";
+        when "001"  => data_reg <= "000000000000000011111111";
         when "010"  => data_reg <= "000000001111111100000000";
-        when "100"  => data_reg <= "000000000000000011111111";
+        when "100"  => data_reg <= "111111110000000000000000";
         when others => data_reg <= "111111111111111111111111";
 
-       end case;
+      end case;
 
     end if;
 
   end process;
 
-  data      <= data_reg when video_on_int = '1' else "000000000000000000000000";
+  led <= led_reg;
+  data     <= data_reg when video_on_int = '1' else "000000000000000000000000";
   video_on <= video_on_int;
   host_pnt <= '1';
   proj_on  <= '1';
