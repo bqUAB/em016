@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <i2c.h>
 #include <dlpc2607.h>
+#include <mpu9250.h>
 
 
 int main() {

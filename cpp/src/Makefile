@@ -13,7 +13,7 @@
 TARGET  = em016-demo
 
 # Here we add all *.cc files that we want to compile
-CPPSRCS = main.cc i2c.cc dlpc2607.cc
+CPPSRCS = main.cc i2c.cc dlpc2607.cc mpu9250.cc
 
 # Here we add the paths to all include directories
 INCS    = ../include

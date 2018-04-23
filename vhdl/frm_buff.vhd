@@ -1,9 +1,9 @@
 -- ***************************************************************************
--- * Frame Buffer
--- * The read and write address size is determined by the output draw area
--- * that in this case is 128x64.
--- * 128 -> 7 bits, 64 -> 6 bits
--- * address size = 7 + 6 = 13
+-- Frame Buffer
+-- The memory size is determined by the output draw area that in this case is
+-- 640x480.
+-- 640 -> 10 bits, 480 -> 9 bits
+-- address size = 10 + 9 = 19
 -- ***************************************************************************
 
 library ieee;
@@ -16,41 +16,39 @@ entity frm_buff is
     -------------------------------------
     -- Dimensions of the output draw area
     -------------------------------------
-    X_DIM     : integer := 128;  -- Desired x dimension
-    X_DIM_BITS: integer :=   7;
-    Y_DIM     : integer :=  64;  -- Desired y dimension
-    Y_DIM_BITS: integer :=   6;
+    X_DIM     : integer := 640;  -- Desired x dimension
+    X_DIM_BITS: integer :=  10;
+    Y_DIM     : integer := 480;  -- Desired y dimension
+    Y_DIM_BITS: integer :=   9;
     BPP       : integer :=   8  -- Bits per pixel
   );
 
   port(
-    clk       , rst     : in  std_logic;
-    bitmap_on , data_en : in  std_logic;
-    red, green, blue    : in  std_logic_vector( 7 downto 0);
-    r_addr    , w_addr  : in  std_logic_vector(13 downto 0);
-    rgb                 : out std_logic_vector(23 downto 0)
+    clk     : in  std_logic;
+    rst     : in  std_logic;
+    w_en    : in  std_logic;
+    rgb_in  : in  std_logic_vector(23 downto 0);
+    r_addr  : in  std_logic_vector(19 downto 0);
+    w_addr  : in  std_logic_vector(19 downto 0);
+    rgb_out : out std_logic_vector(23 downto 0)
   );
 
 end frm_buff;
 
 architecture arch of frm_buff is
 
-  signal bitmap_on: std_logic;
-  -- The size of the px vector is dependent on the resolution
-  signal px_x , px_y : std_logic_vector(9 downto 0);
+  signal video_on: std_logic;
   signal r_in , g_in , b_in : std_logic_vector(BPP-1 downto 0);
   signal r_out, g_out, b_out: std_logic_vector(BPP-1 downto 0);
-  signal w_addr, r_addr:
-    std_logic_vector(X_DIM_BITS + Y_DIM_BITS - 1 downto 0);
+  signal px_xy: std_logic_vector(X_DIM_BITS + Y_DIM_BITS - 1 downto 0);
 
 begin
 
   -- memory inputs
-  r_in <= red;
-  g_in <= green;
-  b_in <= blue;
-  r_addr <= std_logic_vector(
-    px_y(Y_DIM_BITS-1 downto 0) & px_x(X_DIM_BITS-1 downto 0)
+  r_in <= rgb_in(23 downto 16);
+  g_in <= rgb_in(15 downto  8);
+  b_in <= rgb_in( 7 downto  0);
+  px_xy <= std_logic_vector(px_y(Y_DIM_BITS-1 downto 0) & px_x(X_DIM_BITS-1 downto 0)
   );
 
   -- Instantiate 3 RAMs
@@ -60,7 +58,7 @@ begin
 
     port map(
       clk    => clk,
-      we     => data_en,
+      we     => w_en,
       w_addr => w_addr,
       r_addr => r_addr,
       d      => din_r,
@@ -73,7 +71,7 @@ begin
 
     port map(
              clk    => clk,
-             we     => data_en,
+             we     => w_en,
              w_addr => w_addr,
              r_addr => r_addr,
              d      => din_g,
@@ -86,7 +84,7 @@ begin
 
     port map(
              clk    => clk,
-             we     => data_en,
+             we     => w_en,
              w_addr => w_addr,
              r_addr => r_addr,
              d      => din_b,
@@ -94,9 +92,9 @@ begin
     );
 
   -- RGB multiplexing circuit
-  process(data_en, bitmap_on, dout_r, dout_g, dout_b) begin
+  process(w_en, bitmap_on, dout_r, dout_g, dout_b) begin
 
-    if data_en = '0' then  -- Off
+    if w_en = '0' then  -- Off
 
       red   <= (others=>'0');
       green <= (others=>'0');

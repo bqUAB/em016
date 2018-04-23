@@ -50,8 +50,8 @@ begin
 
       case sw is
 
-        when "000"  => data_reg <= "000000000000000000000000";
-        when "001"  => data_reg <= "000000000000000011111111";
+        when "000"  => data_reg <= (others => '0');
+        when "001"  => data_reg(7 downto 0) <= (others => '1');
         when "010"  => data_reg <= "000000001111111100000000";
         when "100"  => data_reg <= "111111110000000000000000";
         when others => data_reg <= "111111111111111111111111";
