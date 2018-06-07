@@ -9,19 +9,19 @@ use ieee.numeric_std.all;
 entity dlp2k is
   port(
     clk  , rst   : in  std_logic;
-    sw           : in  std_logic_vector( 2 downto 0);
-    led          : out std_logic_vector( 2 downto 0);
     data         : out std_logic_vector(23 downto 0);
     hsync, vsync, px_clk, video_on : out std_logic;
     proj_on , host_pnt : out std_logic
   );
 end dlp2k;
 
-architecture arq of dlp2k is
+architecture arch of dlp2k is
 
-  signal led_reg : std_logic_vector( 2 downto 0);
+  constant BUSWIDTH: integer := 24;
+
   signal data_reg: std_logic_vector(23 downto 0);
-  signal video_on_int : std_logic;  -- Signal needed for RGB register
+  signal video_on_int : std_logic;  -- Signal needed for data activation
+  signal px_clk_int: std_logic;  -- Counter driver signal
 
 begin
 
@@ -30,7 +30,7 @@ begin
     port map(
              clk       => clk,
              rst       => rst,
-             px_clk    => px_clk,
+             px_clk    => px_clk_int,
              video_on  => video_on_int,
              pixel_x   => open,
              pixel_y   => open,
@@ -38,34 +38,20 @@ begin
              vsync     => vsync
     );
 
-  -- RGB buffer
-  process(clk, rst, sw) begin
+  -- Instantiate a free runing binary counter circuit
+  bin_counter_unit: entity work.free_run_bin_counter(arch)
+  generic map(N => BUSWIDTH)
+  port map(
+    clk      => px_clk_int,
+    rst      => rst,
+    max_tick => open,
+    count    => data_reg
+  );
 
-    if rst = '0' then
-      data_reg <= (others => '0');
-
-    elsif(rising_edge(clk)) then
-
-      led_reg <= sw;
-
-      case sw is
-
-        when "000"  => data_reg <= "000000000000000000000000";
-        when "001"  => data_reg <= "000000000000000011111111";
-        when "010"  => data_reg <= "000000001111111100000000";
-        when "100"  => data_reg <= "111111110000000000000000";
-        when others => data_reg <= "111111111111111111111111";
-
-      end case;
-
-    end if;
-
-  end process;
-
-  led <= led_reg;
+  px_clk   <= px_clk_int;
   data     <= data_reg when video_on_int = '1' else "000000000000000000000000";
   video_on <= video_on_int;
   host_pnt <= '1';
   proj_on  <= '1';
 
-end arq;
+end arch;
