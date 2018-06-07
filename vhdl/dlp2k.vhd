@@ -21,7 +21,9 @@ architecture arch of dlp2k is
 
   signal data_reg: std_logic_vector(23 downto 0);
   signal video_on_int : std_logic;  -- Signal needed for data activation
-  signal px_clk_int: std_logic;  -- Counter driver signal
+
+  signal clk_div16: std_logic;  -- Counter driver signal
+  signal clk_divider: unsigned(31 downto 0);
 
 begin
 
@@ -30,7 +32,7 @@ begin
     port map(
              clk       => clk,
              rst       => rst,
-             px_clk    => px_clk_int,
+             px_clk    => px_clk,
              video_on  => video_on_int,
              pixel_x   => open,
              pixel_y   => open,
@@ -42,14 +44,24 @@ begin
   bin_counter_unit: entity work.free_run_bin_counter(arch)
   generic map(N => BUSWIDTH)
   port map(
-    clk      => px_clk_int,
+    clk      => clk_div16,
     rst      => rst,
     max_tick => open,
     count    => data_reg
   );
 
-  px_clk   <= px_clk_int;
-  data     <= data_reg when video_on_int = '1' else "000000000000000000000000";
+  process(clk, rst) begin
+    if(rst='0') then
+      clk_divider <= (others=>'0');
+    elsif(rising_edge(clk)) then
+      clk_divider <= clk_divider + 1;
+    end if;
+  end process;
+
+
+  clk_div16 <= clk_divider(18);
+--  data     <= data_reg when video_on_int = '1' else "000000000000000000000000";
+  data     <= data_reg;
   video_on <= video_on_int;
   host_pnt <= '1';
   proj_on  <= '1';
