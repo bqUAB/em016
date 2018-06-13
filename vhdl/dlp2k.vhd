@@ -7,22 +7,31 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity dlp2k is
+
   port(
-    clk  , rst   : in  std_logic;
-    led          : out std_logic_vector( 4 downto 0);
-    data         : out std_logic_vector(23 downto 0);
-    hsync, vsync, px_clk, video_on : out std_logic;
-    proj_on , host_pnt : out std_logic
+    clk, rst : in  std_logic;
+    led      : out std_logic_vector( 4 downto 0);
+
+    -- Parallel I/F Video Data
+    data : out std_logic_vector(23 downto 0);
+
+    -- Parallel I/F Video Control
+    hsync, vsync, pclk, dataen  : out std_logic;
+
+    -- System Control Lines
+    gpio5, gpio_init_done       : out std_logic;
+    proj_on_ext , host_presentz : out std_logic
   );
+
 end dlp2k;
 
 architecture arch of dlp2k is
 
   signal data_reg: std_logic_vector(23 downto 0);
-  signal video_on_int: std_logic;  -- Signal needed for data activation
+  signal video_on: std_logic;  -- Signal needed for data activation
 
   signal clk_div: std_logic;  -- Counter driver signal
-  signal clk_divider: unsigned(25 downto 0);
+  signal clk_divider: unsigned(26 downto 0);
   signal count_int: std_logic_vector(4 downto 0);
 
 
@@ -33,8 +42,8 @@ begin
     port map(
              clk       => clk,
              rst       => rst,
-             px_clk    => px_clk,
-             video_on  => video_on_int,
+             px_clk    => pclk,
+             video_on  => video_on,
              pixel_x   => open,
              pixel_y   => open,
              hsync     => hsync,
@@ -67,13 +76,15 @@ begin
     end if;
   end process;
 
-  clk_div <= clk_divider(25);
+  clk_div <= clk_divider(26);
 
-  data     <= data_reg when video_on_int = '1' else (others=>'0');
+  data     <= data_reg when video_on = '1' else (others=>'0');
 --  data <= (others=>'1');
   led  <= count_int;
-  video_on <= video_on_int;
-  host_pnt <= '1';
-  proj_on  <= '1';
+  dataen <= video_on;
+  gpio5          <= 'Z';
+  gpio_init_done <= '1';
+  host_presentz  <= '1';
+  proj_on_ext    <= '1';
 
 end arch;
